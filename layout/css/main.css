@@ -1,0 +1,46 @@
+/*
+= Sections:
+- General
+- Navbar
+- Starting Page
+*/
+/* ====================================== */
+/* General Rules */
+:root {
+  --mainColorSite: #686de0;
+}
+/* ====================================== */
+/* Navbar */
+.navbar,
+.dropdown-menu {
+  background-color: #686de0 !important;
+  /* color: white !important; */
+}
+
+.navbar a,
+.navbar a.active {
+  color: white !important;
+}
+
+button.navbar-toggler,
+button.navbar-toggler:focus {
+  border-color: white;
+  box-shadow: none;
+}
+.navbar-collapse.show form {
+  margin-top: 15px;
+}
+/* ====================================== */
+/* Starting Page */
+.startPage {
+  height: 100vh;
+  background-image: url("../imgs/wave.svg");
+  background-size: cover;
+}
+.loginForm {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(-50%, -50%);
+}
+/* ====================================== */
