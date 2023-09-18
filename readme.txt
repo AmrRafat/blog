@@ -8,6 +8,3 @@ Of course as a member you have a profile where you can let other members know mo
 As a moderator, you will be able to check the subjects and approve the subject to be posted.
 You will have the ability to delete subjects or comments against the policy of the blog and that will send an automatic warning to the member.
 
-PLEASE NOTE: WORK IN PROGRESS
-Make sure to use your own port, username, password and database name for the database in config.php
-
