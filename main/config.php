@@ -1,6 +1,6 @@
 <?php
 
-$dsn = "mysql:host/localhost;dbname=store;port=[PORT NUMBER HERE]";
+$dsn = "mysql:host/localhost;dbname=[DATABASE NAME];port=[PORT NUMBER HERE]";
 $user = "root";
 $pass = "";
 $options = array(

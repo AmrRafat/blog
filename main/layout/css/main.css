@@ -51,7 +51,7 @@ button.navbar-toggler:focus {
   max-width: 530px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991px) {
   .loginWindow {
     margin-top: 100px;
   }
@@ -97,10 +97,28 @@ button.navbar-toggler:focus {
   left: 50%;
 }
 
-.msg {
+.msg,
+.msg1 {
   display: none;
+  background-color: white;
+  color: var(--mainColorSite);
+  font-weight: bold;
 }
-.msg.active {
-  display: block;
+
+.userNameCol,
+.passCol {
+  position: relative;
+}
+
+i.avail,
+i.inavail,
+i.diff,
+i.matching {
+  position: absolute;
+  top: 50%;
+  right: 5%;
+  transform: translateY(-50%);
+  display: none;
+  color: var(--mainColorSite);
 }
 /* ====================================== */
