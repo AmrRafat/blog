@@ -19,11 +19,11 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <?php
-if (isset($_SESSION['username'])) {
-    echo $_SESSION['username'];
+if (isset($_SESSION['fullname'])) {
+    echo $_SESSION['fullname'];
     echo '</a>';
     echo '<ul class="dropdown-menu">';
-    echo '<li><a class="dropdown-item" href="#">Profile</a></li>';
+    echo '<li><a class="dropdown-item" href="profile.php">Profile</a></li>';
     echo '<li><a class="dropdown-item" href="#">Settings</a></li>';
     echo '<li><a class="dropdown-item" href="#">Help & Support</a></li>';
     echo '<li><hr class="dropdown-divider"></li>';

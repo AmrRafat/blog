@@ -22,7 +22,8 @@ if (isset($_POST)) {
             // if count > 0, Database contains record about this username
             if ($count > 0) {
                 $_SESSION['username'] = $username; // Register Session Name
-                $_SESSION['id'] = $row['user_id']; // Register Session ID
+                $_SESSION['fullname'] = $row['fullname']; // Register Fullname
+                $_SESSION['id'] = $row['userid']; // Register Session ID
                 $_SESSION['status'] = $row['status']; // Get account status
                 $_SESSION['access'] = $row['access']; // Registering User Access
                 header('location: articles.php'); // Redirect to articles

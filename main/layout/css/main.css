@@ -3,17 +3,31 @@
 - General
 - Navbar
 - Starting Page
+- Profile
 */
 /* ====================================== */
 /* General Rules */
+/* ====================================== */
 :root {
   --mainColorSite: #686de0;
+  --shade1: #5b61c7;
+  --shade2: #6d73ed;
 }
 body {
   user-select: none;
 }
+
+.card {
+  border-color: var(--mainColorSite);
+}
+
+hr,
+.vr {
+  color: var(--mainColorSite);
+}
 /* ====================================== */
 /* Navbar */
+/* ====================================== */
 .navbar,
 .dropdown-menu {
   background-color: #686de0 !important;
@@ -33,8 +47,13 @@ button.navbar-toggler:focus {
 .navbar-collapse.show form {
   margin-top: 15px;
 }
+
+.dropdown-item:hover {
+  background-color: var(--shade1);
+}
 /* ====================================== */
 /* Starting Page */
+/* ====================================== */
 .startPage img {
   z-index: -1000;
   position: absolute;
@@ -119,6 +138,99 @@ i.matching {
   right: 5%;
   transform: translateY(-50%);
   display: none;
+  z-index: 100;
+  color: var(--mainColorSite);
+}
+/* ====================================== */
+/* Profile  */
+/* ====================================== */
+.img-thumbnail {
+  border-color: var(--mainColorSite);
+}
+
+.myArticles,
+.myQuestions,
+.fav {
+  background-color: var(--shade1);
+  color: white;
+}
+
+.myArticles:hover,
+.myQuestions:hover,
+.fav:hover,
+.myArticles:focus,
+.myQuestions:focus,
+.fav:focus {
+  color: white;
+  background-color: var(--shade2);
+}
+
+.horizontalLine {
+  display: none;
+}
+
+@media (max-width: 991px) {
+  .horizontalLine {
+    display: block;
+  }
+  .verticalLine {
+    display: none;
+  }
+}
+
+.profileMenu .row div:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+@media (min-width: 426px) and (max-width: 768px) {
+  .profileMenuOptions {
+    width: 33.333333333% !important;
+  }
+  .profileName {
+    text-align: center !important;
+    padding-left: 0;
+    margin-bottom: 5px;
+  }
+}
+
+/* @media (max-width: 425px) {
+} */
+
+.editProfileForm span.input-group-text {
+  min-width: 150px;
+  background-color: var(--shade2);
+  color: white;
+}
+
+.editProfile,
+.saveEdits {
+  background-color: var(--shade1);
+  border-color: var(--shade2);
+}
+
+.editProfile:hover,
+.editProfile:focus,
+.editProfile:active,
+.saveEdits:hover,
+.saveEdits:active,
+.saveEdits:focus {
+  background-color: var(--shade2) !important;
+  border-color: var(--shade2) !important;
+  color: white !important;
+}
+
+.editProfile:focus,
+.saveEdits:focus {
+  box-shadow: #6d73ed4d;
+}
+
+.userLength {
+  position: absolute;
+  top: 50%;
+  right: 5%;
+  transform: translateY(-50%);
+  display: none;
+  z-index: 100;
   color: var(--mainColorSite);
 }
 /* ====================================== */

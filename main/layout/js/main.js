@@ -66,29 +66,26 @@ $(function () {
     $(".part1").removeClass("done");
   });
   // Check username availibility
-  $("#pass1").on("click, focus", function () {
+  $("#user").on("keyup", function () {
     var username = $("#user").val();
-    if (username == "") {
-      $(".msg").html("There is no username");
-      $(".msg").fadeIn();
-    } else {
-      $.ajax({
-        type: "POST",
-        url: "includes/functions/ajax.php",
-        data: {
-          user: username,
-        },
-        success: function (html) {
-          if (html == 0) {
-            $("i.avail").fadeOut();
-            $("i.inavail").fadeIn();
-          } else if (html == 1) {
-            $("i.inavail").fadeOut();
-            $("i.avail").fadeIn();
-          }
-        },
-      });
-    }
+    $.ajax({
+      type: "POST",
+      url: "includes/functions/ajax.php",
+      data: {
+        user: username,
+      },
+      success: function (html) {
+        if (html == 0) {
+          $("i.avail").fadeOut();
+          $("i.inavail").fadeIn();
+          $(".next1").prop("disabled", true);
+        } else if (html == 1) {
+          $("i.inavail").fadeOut();
+          $("i.avail").fadeIn();
+          $(".next1").prop("disabled", false);
+        }
+      },
+    });
   });
   // Check second password matching
   $("#pass2").on("keyup", function () {
@@ -117,6 +114,96 @@ $(function () {
   // Remove error msgs upon any change in second page
   $("#fullname, #email").on("keyup change", function () {
     $(".msg1").fadeOut();
+  });
+  // ============================
+  // Profile Rules
+  // ============================
+  // Open & submit profile edit
+  $(".editProfile").on("click", function () {
+    $(".editProfileForm input:not(.age, #specialization)").removeAttr(
+      "readonly"
+    );
+    var eduLvl = $("#eduLvl").val();
+    if (
+      eduLvl == "Bachelor's degree" ||
+      eduLvl == "Master's degree" ||
+      eduLvl == "Doctorate or higher"
+    ) {
+      $(".editProfileForm input#specialization").removeAttr("readonly");
+    }
+    $(".editProfileForm select").removeAttr("disabled");
+    $(".editProfile").addClass("saveEdits");
+    $(".editProfile").html("Save");
+    $(".editProfile").removeClass("editProfile");
+    $(".saveEdits").on("click", function () {
+      var user = $("#username").val();
+      if (user.length >= 5 && user.length <= 16) {
+        $(".saveEdits").html("Edit profile");
+        $(".saveEdits").addClass("editProfile");
+        $(".saveEdits").removeClass("saveEdits");
+        $(".editProfileForm select").attr("disabled");
+        $(".editProfileForm input").attr("readonly");
+        $(".editProfileForm").trigger("submit");
+      }
+    });
+  });
+  // Check username
+  $("#username").on("keyup", function () {
+    var username = $("#username").val();
+    if (username.length < 5) {
+      if ($("i.avail").attr("style") === "display: inline;") {
+        $("i.avail").fadeOut();
+      }
+      if ($("i.inavail").attr("style") === "display: inline;") {
+        $("i.inavail").fadeOut();
+      }
+      $(".userLength").fadeIn();
+    } else if ($(".userLength").attr("style") == "display: inline;") {
+      $(".userLength").fadeOut();
+    }
+    if (username.length >= 5) {
+      var id = $("#profileId").val();
+      $.ajax({
+        type: "POST",
+        url: "includes/functions/ajax.php",
+        data: {
+          user: username,
+          id: id,
+        },
+        success: function (html) {
+          if (html == 0) {
+            $("i.avail").fadeOut();
+            $("i.inavail").fadeIn();
+          } else if (html == 1) {
+            $("i.inavail").fadeOut();
+            $("i.avail").fadeIn();
+          } else if (html == 2) {
+            if ($("i.avail").attr("style") === "display: inline;") {
+              $("i.avail").fadeOut();
+            }
+            if ($("i.inavail").attr("style") === "display: inline;") {
+              $("i.inavail").fadeOut();
+            }
+          }
+        },
+      });
+    }
+  });
+  // Make specializaiton field available upon selected the eudcational level
+  $("#eduLvl").on("change", function () {
+    var eduLvl = $(this).val();
+    if (
+      eduLvl == "Bachelor's degree" ||
+      eduLvl == "Master's degree" ||
+      eduLvl == "Doctorate or higher"
+    ) {
+      console.log("HI");
+      $(".editProfileForm input#specialization").removeAttr("readonly");
+    } else {
+      console.log("not hi");
+      $(".editProfileForm input#specialization").val("");
+      $(".editProfileForm input#specialization").attr("readonly", "readonly");
+    }
   });
   // ============================
 });
