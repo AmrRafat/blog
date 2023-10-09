@@ -12,6 +12,8 @@
   --mainColorSite: #686de0;
   --shade1: #5b61c7;
   --shade2: #6d73ed;
+  --boxShadow: #6d73ed54;
+  --boxShadowValue: 0 0 0 0.25rem var(--boxShadow);
 }
 body {
   user-select: none;
@@ -25,6 +27,26 @@ hr,
 .vr {
   color: var(--mainColorSite);
 }
+
+h1,
+h2 {
+  color: var(--mainColorSite);
+}
+
+.btn-outline-secondary {
+  color: var(--shade1) !important;
+  border-color: var(--shade1) !important;
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--shade2);
+  color: white !important;
+}
+
+.btn-outline-secondary:active {
+  background-color: var(--shade2) !important;
+}
+
 /* ====================================== */
 /* Navbar */
 /* ====================================== */
@@ -150,7 +172,8 @@ i.matching {
 
 .myArticles,
 .myQuestions,
-.fav {
+.fav,
+.newArticle {
   background-color: var(--shade1);
   color: white;
 }
@@ -158,9 +181,11 @@ i.matching {
 .myArticles:hover,
 .myQuestions:hover,
 .fav:hover,
+.newArticle:hover,
 .myArticles:focus,
 .myQuestions:focus,
-.fav:focus {
+.fav:focus,
+.newArticle:focus {
   color: white;
   background-color: var(--shade2);
 }
@@ -182,7 +207,7 @@ i.matching {
   margin-bottom: 5px;
 }
 
-@media (min-width: 426px) and (max-width: 768px) {
+@media (min-width: 476px) and (max-width: 768px) {
   .profileMenuOptions {
     width: 33.333333333% !important;
   }
@@ -193,8 +218,11 @@ i.matching {
   }
 }
 
-/* @media (max-width: 425px) {
-} */
+@media (min-width: 426px) and (max-width: 475px) {
+  .profileMenuOptions {
+    width: 50% !important;
+  }
+}
 
 .editProfileForm span.input-group-text {
   min-width: 150px;
@@ -221,7 +249,7 @@ i.matching {
 
 .editProfile:focus,
 .saveEdits:focus {
-  box-shadow: #6d73ed4d;
+  box-shadow: var(--boxShadowValue);
 }
 
 .userLength {
@@ -232,5 +260,126 @@ i.matching {
   display: none;
   z-index: 100;
   color: var(--mainColorSite);
+}
+/* ====================================== */
+/* Article Form */
+/* ====================================== */
+.articleTitleGroup,
+.subtitleChange,
+.pChange {
+  display: none;
+}
+
+@media (min-width: 991px) {
+  h1.articleTitle {
+    max-height: 144px;
+    overflow: hidden;
+  }
+  .articleTools {
+    width: 631px;
+  }
+}
+
+.articleTools {
+  top: 80px;
+  z-index: 500;
+  background-color: white;
+}
+
+@media (max-width: 767px) {
+  .articleTools .vr {
+    display: none;
+  }
+  .articleTools button {
+    width: 45%;
+  }
+  .articleTools button:first-child,
+  .articleTools button:nth-child(2) {
+    margin-bottom: 10px;
+  }
+}
+
+.article input {
+  border-color: var(--shade1);
+}
+
+.article input:focus,
+.article textarea:focus {
+  box-shadow: var(--boxShadowValue) !important;
+}
+
+.article input[type="file"]:focus,
+.article input[type="file"]:hover,
+.article input[type="file"].filled {
+  background-color: var(--shade2);
+  color: white;
+}
+/* Article Format */
+.article .card-body {
+  padding-left: 2%;
+  padding-right: 2%;
+  background-color: #eeeeee;
+}
+
+@media (max-width: 539px) {
+  .article .card-footer {
+    justify-content: center !important;
+  }
+  .article .card-footer .vr:last-of-type {
+    display: none;
+  }
+  .article .card-footer span:nth-last-of-type(2) {
+    margin-right: 1.5rem !important;
+  }
+}
+
+@media (max-width: 459px) {
+  .article .card-footer .vr:last-of-type {
+    display: block;
+  }
+  .article .card-footer .vr:first-of-type {
+    display: none;
+  }
+  .article .card-footer span:first-of-type {
+    margin: 0 auto !important;
+    width: 100%;
+    text-align: center;
+  }
+  .article .card-footer span:nth-last-of-type(2) {
+    margin-right: 0.5rem !important;
+  }
+}
+
+.article img {
+  max-width: 75%;
+}
+
+.article p {
+  margin-left: 1%;
+  color: #353a94;
+  font-size: 18px;
+}
+
+.article h3,
+.article .card-footer,
+.article .card-header {
+  color: var(--mainColorSite);
+}
+/* Main articles page */
+.titleInMain {
+  color: var(--mainColorSite);
+}
+
+/* Subjects articles */
+
+.noArticles {
+  border: 1px solid var(--shade1);
+  background-color: var(--boxShadow);
+  font-size: 18px;
+}
+
+.articleCard h3,
+.articleCard p {
+  color: var(--shade1);
 }
 /* ====================================== */

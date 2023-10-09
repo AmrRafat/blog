@@ -14,8 +14,7 @@ if (isset($_POST)) {
             $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
             $hashedPass = sha1($password);
             // Check if user is in database
-            $stmt = $con->prepare(
-                "SELECT * FROM users WHERE username = ? AND password = ?");
+            $stmt = $con->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
             $stmt->execute(array($username, $hashedPass));
             $row = $stmt->fetch();
             $count = $stmt->rowCount();
@@ -38,9 +37,21 @@ if (isset($_POST)) {
             // Apply info into DB
             $stmt = $con->prepare("INSERT INTO users(username, password, email, fullname) VALUES(?,?,?,?)");
             $stmt->execute(array($user, $pass, $email, $fullName));
-            $_SESSION['username'] = $user;
-            header('location: articles.php');
-            exit();
+            echo ($user);
+            $stmt1 = $con->prepare("SELECT * FROM users WHERE username = ?");
+            $stmt1->execute(array($user));
+            $row = $stmt1->fetch();
+            $count = $stmt1->rowCount();
+            // if count > 0, Database contains record about this username
+            if ($count > 0) {
+                $_SESSION['username'] = $user; // Register Session Name
+                $_SESSION['fullname'] = $row['fullname']; // Register Fullname
+                $_SESSION['id'] = $row['userid']; // Register Session ID
+                $_SESSION['status'] = $row['status']; // Get account status
+                $_SESSION['access'] = $row['access']; // Registering User Access
+                header('location: articles.php');
+                exit();
+            }
         }
     }}
 ?>

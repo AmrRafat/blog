@@ -1,7 +1,6 @@
 <?php
 include '../../config.php';
-// Signup functions
-if (isset($_POST['user'])) {
+if (isset($_POST['user'])) { // Check username in DB
     $user = $_POST['user'];
     $stmt = $con->prepare('SELECT * FROM users WHERE username = ?');
     $stmt->execute(array($user));

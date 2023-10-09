@@ -35,6 +35,7 @@ $info = $stmt->fetch();
                         <hr>
                         <div class="profileMenu">
                             <div class="row align-items-center">
+                            <div class="col-md-9 profileMenuOptions mx-auto"><a href="articlesTool.php" class="btn form-control newArticle">New Article</a></div>
                                 <div class="col-md-9 profileMenuOptions mx-auto"><span class="btn form-control myArticles">My Articles</span></div>
                                 <div class="col-md-9 profileMenuOptions mx-auto"><span class="btn form-control myQuestions">My Questions</span></div>
                                 <div class="col-md-9 profileMenuOptions mx-auto"><span class="btn form-control fav">Favorites</span></div>
