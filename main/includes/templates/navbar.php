@@ -14,7 +14,7 @@
             <a class="nav-link active" aria-current="page" href="articles.php">Articles</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Questions</a>
+                <a class="nav-link" href="questions.php">Questions</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

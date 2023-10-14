@@ -15,8 +15,31 @@
   --boxShadow: #6d73ed54;
   --boxShadowValue: 0 0 0 0.25rem var(--boxShadow);
 }
+
 body {
   user-select: none;
+}
+
+.main-container {
+  min-height: 100vh;
+  position: relative;
+}
+
+.footer {
+  background-color: var(--mainColorSite);
+  color: white;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.footer .about,
+.footer .sections {
+  font-size: 18px;
+}
+
+.footer .about p {
+  line-height: 1.75;
 }
 
 .card {
@@ -29,7 +52,8 @@ hr,
 }
 
 h1,
-h2 {
+h2,
+h3 {
   color: var(--mainColorSite);
 }
 
@@ -74,12 +98,16 @@ button.navbar-toggler:focus {
   background-color: var(--shade1);
 }
 /* ====================================== */
-/* Starting Page */
+/* Login/register Page */
 /* ====================================== */
+.startPage {
+  position: relative;
+}
+
 .startPage img {
   z-index: -1000;
   position: absolute;
-  bottom: 0;
+  bottom: -22px;
 }
 
 .loginWindow {
@@ -100,6 +128,23 @@ button.navbar-toggler:focus {
   .signupForm {
     margin-top: 20px;
   }
+}
+
+.pwBox {
+  position: relative;
+}
+
+.showPw {
+  color: var(--mainColorSite);
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  right: 10%;
+  transform: translateY(-50%);
+}
+
+.passCol .showPw {
+  right: 15%;
 }
 
 .signupForm {
@@ -173,7 +218,8 @@ i.matching {
 .myArticles,
 .myQuestions,
 .fav,
-.newArticle {
+.newArticle,
+.newQuestion {
   background-color: var(--shade1);
   color: white;
 }
@@ -182,10 +228,12 @@ i.matching {
 .myQuestions:hover,
 .fav:hover,
 .newArticle:hover,
+.newQuestion:hover,
 .myArticles:focus,
 .myQuestions:focus,
 .fav:focus,
-.newArticle:focus {
+.newArticle:focus,
+.newQuestion:focus {
   color: white;
   background-color: var(--shade2);
 }
@@ -365,6 +413,18 @@ i.matching {
 .article .card-header {
   color: var(--mainColorSite);
 }
+
+.article .card-header {
+  position: relative;
+}
+
+.article .card-header .favIcon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  cursor: pointer;
+}
 /* Main articles page */
 .titleInMain {
   color: var(--mainColorSite);
@@ -380,6 +440,119 @@ i.matching {
 
 .articleCard h3,
 .articleCard p {
+  color: var(--shade1);
+}
+
+.noFavYet {
+  background-color: var(--mainColorSite);
+  color: white;
+  max-width: 60%;
+  font-size: 18px;
+}
+/* ====================================== */
+/* Questions */
+/* ====================================== */
+.questionCard .card .card-body:hover {
+  background-color: var(--shade2);
+}
+
+.questionCard .card .card-body:hover h3 {
+  color: white !important;
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .questionsFooter {
+    justify-content: center !important;
+  }
+  .questionsFooter .vr:last-of-type {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .questionsFooter .vr:last-of-type {
+    display: block;
+  }
+  .questionsFooter .vr:first-of-type {
+    display: none;
+  }
+}
+
+@media (max-width: 355px) {
+  .questionsFooter {
+    justify-content: center !important;
+  }
+
+  .questionsFooter .vr {
+    margin-right: 0.25rem !important;
+    margin-left: 0.25rem !important;
+  }
+}
+
+@media (max-width: 339px) {
+  .questionsFooter .vr {
+    margin-right: 0.5rem !important;
+    margin-left: 0.5rem !important;
+  }
+  .questionsFooter .vr:last-of-type {
+    display: none;
+  }
+  span:last-of-type {
+    margin-left: 1rem;
+  }
+}
+
+.questionsFooter,
+.questionToolFooter {
+  color: var(--mainColorSite);
+}
+
+.questionToolForm input,
+.questionToolForm textarea,
+.questionToolForm select {
+  border-color: var(--shade1);
+}
+
+.questionToolForm input:focus,
+.questionToolForm textarea:focus {
+  box-shadow: var(--boxShadowValue);
+}
+
+.questionToolForm label.input-group-text {
+  border-color: var(--shade1);
+}
+
+.questionToolForm label {
+  color: var(--mainColorSite);
+}
+
+.questionToolFooter hr {
+  display: none;
+}
+
+@media (max-width: 446px) {
+  .questionToolFooter .vr {
+    display: none;
+  }
+  .questionToolFooter hr {
+    display: block;
+    width: 75%;
+    color: var(--mainColorSite);
+  }
+}
+.questionTitle span {
+  color: var(--mainColorSite);
+}
+
+.questionDetails p {
+  color: var(--shade1);
+}
+
+.answers {
+  color: var(--mainColorSite);
+}
+
+.answers p {
   color: var(--shade1);
 }
 /* ====================================== */

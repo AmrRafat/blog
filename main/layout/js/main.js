@@ -7,13 +7,32 @@ $(function () {
   if (window.history.replaceState) {
     window.history.replaceState(null, null, window.location.href);
   }
-
-  // $(window).on("keyup", function (e) {
-  //   console.log(e.keyCode);
-  // });
+  // Apply padding to body to make footer at the end
+  $(function () {
+    $(".body-container").css(
+      "padding-bottom",
+      $(".footer").height() + 70 + "px"
+    );
+  });
+  var footerH = $(".footer").height() + 70 + "px";
+  $(function () {
+    $(".startPage").css("min-height", "calc(100vh - " + footerH + ")");
+  });
   // ============================
   // Login/Signup Rules
   // ============================
+  // Show Pw
+  $(".showPw").on("click", function () {
+    if ($(this).hasClass("fa-eye")) {
+      $(this).removeClass("fa-eye");
+      $(this).addClass("fa-eye-slash");
+      $(this).parent().children("input").attr("type", "text");
+    } else {
+      $(this).removeClass("fa-eye-slash");
+      $(this).addClass("fa-eye");
+      $(this).parent().children("input").attr("type", "password");
+    }
+  });
   // Showing signup form
   $(".signupBtn").on("click", function () {
     $(".loginForm").attr("style", "display:none;");
@@ -47,7 +66,7 @@ $(function () {
           ) {
             $(".part1").addClass("done");
             $(".part2").addClass("done");
-            $("#fullname").focus();
+            $("#firstname").focus();
           } else {
             $(".msg").html("Password must be 6-12 characters");
             $(".msg").fadeIn();
@@ -112,23 +131,40 @@ $(function () {
   });
   // Check second page of signup
   $("form.signupForm :submit").hover(function (e) {
-    var fullName = $("#fullname").val();
+    var firstName = $("#firstname").val();
+    var lastName = $("#lastname").val();
     var email = $("#email").val();
-    if (fullName == "" || email == "") {
+    var emailFormat =
+      /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if (firstName == "" || email == "" || lastName == "") {
       $("form.signupForm :submit").prop("disabled", true);
       $(".msg1").html("Please, fill all fields");
       $(".msg1").fadeIn();
     } else {
-      $("form.signupForm :submit").prop("disabled", false);
+      if (!emailFormat.test(email)) {
+        $("form.signupForm :submit").prop("disabled", true);
+        $(".msg1").html("Please, enter a valid email");
+        $(".msg1").fadeIn();
+      } else {
+        $("form.signupForm :submit").prop("disabled", false);
+      }
     }
   });
   // Remove error msgs upon any change in second page
-  $("#fullname, #email").on("keyup change", function () {
+  $("#firstname, lastname, #email").on("keyup change", function () {
     $(".msg1").fadeOut();
   });
   // Prevent submit using enter
   $(".signupForm").on("keypress", function (e) {
     if (e.keyCode === 13 && e.target.nodeName != "TEXTAREA") {
+      e.preventDefault();
+    }
+  });
+  // Prevent use of space in first and last names
+  $(
+    "#firstname, #lastname, #email, #user, #username, #pass1, #pass2, #loginUsername, #loginPw"
+  ).on("keypress", function (e) {
+    if (e.keyCode === 32) {
       e.preventDefault();
     }
   });
@@ -406,6 +442,9 @@ $(function () {
       .children(".rateField")
       .children("i")
       .removeClass("fa-solid");
+    $(document).on("mouseenter", ".rateChoice", function () {
+      hoverRate($(this));
+    });
   });
   // Save Changes
   $(document).on("click", ".save", function () {
@@ -425,62 +464,141 @@ $(function () {
       $(this).parent().parent().parent().parent().parent().trigger("submit");
     }, 100);
   });
-  // Hover Rate
-  $(document).on("mouseenter", ".rateChoice", function (e) {
-    e.stopPropagation();
+  // Hover Rate function
+  function hoverRate(ele) {
     $("i").removeClass("one");
     $("i").removeClass("two");
     $("i").removeClass("three");
     $("i").removeClass("four");
     $("i").removeClass("five");
-    $(this).parent().children("i:nth-of-type(1)").addClass("one");
-    $(this).parent().children("i:nth-of-type(2)").addClass("two");
-    $(this).parent().children("i:nth-of-type(3)").addClass("three");
-    $(this).parent().children("i:nth-of-type(4)").addClass("four");
-    $(this).parent().children("i:nth-of-type(5)").addClass("five");
-    if ($(this).hasClass("one")) {
+    ele.parent().children("i:nth-of-type(1)").addClass("one");
+    ele.parent().children("i:nth-of-type(2)").addClass("two");
+    ele.parent().children("i:nth-of-type(3)").addClass("three");
+    ele.parent().children("i:nth-of-type(4)").addClass("four");
+    ele.parent().children("i:nth-of-type(5)").addClass("five");
+    if (ele.hasClass("one")) {
       $(".rateChoice").addClass("fa-regular");
       $(".rateChoice").removeClass("fa-solid");
-      $(this).parent().children(".one").removeClass("fa-regular");
-      $(this).parent().children(".one").addClass("fa-solid");
-      $(this).parent().children(".rate").val(1);
-    } else if ($(this).hasClass("two")) {
+      ele.parent().children(".one").removeClass("fa-regular");
+      ele.parent().children(".one").addClass("fa-solid");
+      ele.parent().children(".rate").val(1);
+    } else if (ele.hasClass("two")) {
       $(".rateChoice").removeClass("fa-solid");
       $(".rateChoice").addClass("fa-regular");
-      $(this).parent().children(".one, .two").removeClass("fa-regular");
-      $(this).parent().children(".one, .two").addClass("fa-solid");
-      $(this).parent().children(".rate").val(2);
-    } else if ($(this).hasClass("three")) {
+      ele.parent().children(".one, .two").removeClass("fa-regular");
+      ele.parent().children(".one, .two").addClass("fa-solid");
+      ele.parent().children(".rate").val(2);
+    } else if (ele.hasClass("three")) {
       $(".rateChoice").removeClass("fa-solid");
       $(".rateChoice").addClass("fa-regular");
-      $(this).parent().children(".one, .two, .three").removeClass("fa-regular");
-      $(this).parent().children(".one, .two, .three").addClass("fa-solid");
-      $(this).parent().children(".rate").val(3);
-    } else if ($(this).hasClass("four")) {
+      ele.parent().children(".one, .two, .three").removeClass("fa-regular");
+      ele.parent().children(".one, .two, .three").addClass("fa-solid");
+      ele.parent().children(".rate").val(3);
+    } else if (ele.hasClass("four")) {
       $(".rateChoice").removeClass("fa-solid");
       $(".rateChoice").addClass("fa-regular");
-      $(this)
+      ele
         .parent()
         .children(".one, .two, .three, .four")
         .removeClass("fa-regular");
-      $(this)
-        .parent()
-        .children(".one, .two, .three, .four")
-        .addClass("fa-solid");
-      $(this).parent().children(".rate").val(4);
-    } else if ($(this).hasClass("five")) {
+      ele.parent().children(".one, .two, .three, .four").addClass("fa-solid");
+      ele.parent().children(".rate").val(4);
+    } else if (ele.hasClass("five")) {
       $(".rateChoice").removeClass("fa-solid");
       $(".rateChoice").addClass("fa-regular");
-      $(this)
+      ele
         .parent()
         .children(".one, .two, .three, .four, .five")
         .removeClass("fa-regular");
-      $(this)
+      ele
         .parent()
         .children(".one, .two, .three, .four, .five")
         .addClass("fa-solid");
-      $(this).parent().children(".rate").val(5);
+      ele.parent().children(".rate").val(5);
     }
+  }
+  // Hover Rate
+  $(document).on("mouseenter", ".rateChoice", function () {
+    if (!$(this).parent().hasClass("ratingInComment")) {
+      hoverRate($(this));
+    }
+  });
+  // Click Rate
+  $(document).on("click", ".rateChoice", function (e) {
+    e.stopPropagation();
+    hoverRate($(this));
+    $(document).off("mouseenter", ".rateChoice");
+  });
+  $(".favIcon").on("click", function () {
+    var article = $(this).data("article");
+    var user = $(this).data("user");
+    var editFav;
+    if ($(this).hasClass("fa-regular")) {
+      $(this).removeClass("fa-regular");
+      $(this).addClass("fa-solid");
+      editFav = "1";
+    } else {
+      $(this).addClass("fa-regular");
+      $(this).removeClass("fa-solid");
+      editFav = "0";
+    }
+    $.ajax({
+      type: "POST",
+      url: "includes/functions/ajax.php",
+      data: {
+        editFav: editFav,
+        userID: user,
+        article: article,
+      },
+    });
+  });
+  // ============================
+  // Questions Page Rules
+  // ============================
+  // Prevent Submit upon using Enter key
+  $(".questionToolForm").on("keypress", function (e) {
+    if (e.keyCode === 13 && e.target.nodeName != "TEXTAREA") {
+      e.preventDefault();
+    }
+  });
+  // Allow editing answer
+  $(".editAnswer").on("click", function () {
+    $(".editAnswerText").removeAttr("style", "display: block;");
+    $(".editAnswerText").attr("style", "display: none;");
+    $(this)
+      .parent()
+      .parent()
+      .parent()
+      .parent()
+      .children(".card-body")
+      .children(".editAnswerText")
+      .attr("style", "display: block;");
+    $(this)
+      .parent()
+      .parent()
+      .parent()
+      .parent()
+      .children(".card-body")
+      .children("p")
+      .attr("style", "display: none;");
+    $(".editAnswer").text("Save");
+    setTimeout(() => {
+      $(".editAnswer").addClass("save");
+    }, 500);
+  });
+  // Delete an answer
+  $(".delAnswer").on("click", function () {
+    $(this)
+      .parent()
+      .parent()
+      .parent()
+      .parent()
+      .children(".card-body")
+      .children(".editAnswerText")
+      .text("DEL_COMMENT");
+    setTimeout(() => {
+      $(this).parent().parent().parent().parent().parent().trigger("submit");
+    }, 100);
   });
   // ============================
 });

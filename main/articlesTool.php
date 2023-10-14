@@ -6,12 +6,12 @@ include "init.php";
 <?php
 if (isset($_POST)) {
     if (!empty($_POST)) {
-        // Make each line an element in an array for the description and paragraphs (as they are textareas)
-        $_POST['description'] = explode("\r\n", trim($_POST['description']));
+        // Make each line an element in an array for the description and paragraphs (because they are textareas)
+        $_POST['description'] = explode("\r\n", trim(filter_var($_POST['description'], FILTER_SANITIZE_STRING)));
         $keys = array_keys($_POST);
         foreach ($keys as $key) {
             if (str_contains($key, 'paragraph')) {
-                $_POST[$key] = explode("\r\n", trim($_POST[$key]));
+                $_POST[$key] = explode("\r\n", trim(filter_var($_POST[$key], FILTER_SANITIZE_STRING)));
             }
         }
         // Arrange and save elemetns of the article body
@@ -27,19 +27,15 @@ if (isset($_POST)) {
                 $elementsArray[$neededKey] = $_POST[$neededKey] . '/' . $ext[1];
             }
         }
-        // Creating the folders and the files
+        $elementsArray = json_encode($elementsArray);
+        // Creating the folders for the imgs of the article
         // First check the latest article number on DB
         $stmt = $con->prepare("SELECT article_id FROM articles ORDER BY article_id DESC LIMIT 1");
         $stmt->execute();
         $articlesNo = $stmt->fetch();
         $articleNo = (!empty($articlesNo)) ? intval($articlesNo['article_id']) + 1 : '1';
-        $targetedFile;
-        if (!is_dir('articles/' . $articleNo)) {
-            mkdir('articles/' . $articleNo, 0777, true);
-            mkdir('articles/' . $articleNo . '/' . 'imgs/', 0777, true);
-            if (!file_exists('articles/' . $articleNo . '/' . $articleNo . '.php')) {
-                $targetedFile = fopen('articles/' . $articleNo . '/' . $articleNo . '.php', 'w');
-            }
+        if (!is_dir('layout/imgs/articles/' . $articleNo)) {
+            mkdir('layout/imgs/articles/' . $articleNo, 0777, true); // creating the folder
             // Renaming images and uploading them to imgs folder of the article
             $imgNo = 01;
             $imageKeys = array_keys($_FILES);
@@ -47,24 +43,20 @@ if (isset($_POST)) {
                 if (str_contains($imgKey, 'image')) {
                     $imgExt = explode("/", $_FILES[$imgKey]['type']);
                     $_FILES[$imgKey]['name'] = $imgNo . '.' . $imgExt[1];
-                    if (!file_exists('articles/' . $articleNo . '/' . 'imgs/' . $_FILES[$imgKey]['name'])) {
-                        move_uploaded_file($_FILES[$imgKey]['tmp_name'], 'articles/' . $articleNo . '/' . 'imgs/' . $_FILES[$imgKey]['name']);
+                    if (!file_exists('layout/imgs/articles/' . $articleNo . '/' . $_FILES[$imgKey]['name'])) {
+                        move_uploaded_file($_FILES[$imgKey]['tmp_name'], 'layout/imgs/articles/' . $articleNo . '/' . $_FILES[$imgKey]['name']);
                     }
                     $imgNo++;
                 }
             }
-            // Submit info into function to write the file
-            $fileStructure = createArticle($_POST["articleTitle"], $_SESSION["fullname"], date("j/m/Y"), $_POST["subject"], $elementsArray, $articleNo);
-            fwrite($targetedFile, $fileStructure);
-            fclose($targetedFile);
         } else {
             $articleNo = 0;
         }
         // Submit info into DB
         if ($articleNo != 0) {
             $thumbnailext = explode('/', $_FILES['image-0']['type'])[1];
-            $stmt = $con->prepare("INSERT INTO articles(subject,date,rating,status,title,description,ext) VALUES(?,now(),?,?,?,?,?)");
-            $stmt->execute(array($_POST['subject'], null, 0, $_POST['articleTitle'], json_encode($_POST['description']), $thumbnailext));
+            $stmt = $con->prepare("INSERT INTO articles(subject,date,status,title,description,ext, user_id, elementsArray) VALUES(?,now(),?,?,?,?,?,?)");
+            $stmt->execute(array($_POST['subject'], 0, $_POST['articleTitle'], json_encode($_POST['description']), $thumbnailext, $_SESSION['id'], $elementsArray));
         }
     }
     // Reset the storages

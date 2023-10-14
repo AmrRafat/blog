@@ -31,13 +31,14 @@ if (isset($_POST)) {
         } elseif (isset($_POST['signup'])) {
             // Get all info
             $user = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
-            $pass = sha1($_POST['pass1']);
+            $pass = sha1(filter_var($_POST['pass1']), FILTER_SANITIZE_STRING);
             $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-            $fullName = filter_var($_POST['fullname'], FILTER_SANITIZE_STRING);
+            $firstName = filter_var($_POST['firstName'], FILTER_SANITIZE_STRING);
+            $lastName = filter_var($_POST['lastName'], FILTER_SANITIZE_STRING);
+            $fullName = $firstName . ' ' . $lastName;
             // Apply info into DB
             $stmt = $con->prepare("INSERT INTO users(username, password, email, fullname) VALUES(?,?,?,?)");
             $stmt->execute(array($user, $pass, $email, $fullName));
-            echo ($user);
             $stmt1 = $con->prepare("SELECT * FROM users WHERE username = ?");
             $stmt1->execute(array($user));
             $row = $stmt1->fetch();
@@ -67,88 +68,101 @@ if (isset($_POST)) {
                 </div>
                 <div class="col-lg-5">
                     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" class="mx-auto p-3 form-control text-center loginForm rounded-3 text-light needs-validation" novalidate>
-                    <input type="hidden" name="login">
-                    <div class="form-control bg-transparent mb-3 py-2 text-light">
-                        <label class="form-label">Username</label>
-                        <input type="text" name="username" class="form-control text-center mb-3" required>
-                        <label class="form-label">Password</label>
-                        <input type="password" name="password"class="form-control text-center" required>
-                    </div>
+                        <input type="hidden" name="login">
+                        <div class="form-control bg-transparent mb-3 py-2 text-light">
+                            <label class="form-label">Username</label>
+                            <input type="text" name="username" id="loginUsername" class="form-control text-center mb-3" required>
+                            <label class="form-label">Password</label>
+                            <div class="pwBox">
+                                <input type="password" name="password" id="loginPw" class="form-control text-center" required>
+                                <i class="fa-regular fa-eye showPw"></i>
+                            </div>
+                        </div>
                         <button type="submit"class="form-control w-50 mx-auto">Login</button>
                         <hr>
                         <label class="form-label">Don't have an account??</label>
                         <button type="button"class="form-control w-75 mx-auto signupBtn">Signup</button>
                     </form>
                     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" class="signupForm form-control text-light rounded-3 px-5 py-3 mx-auto overflow-hidden" novalidate>
-                    <input type="hidden" name="signup">
-                    <div class="part1">
-                        <div class="row mb-3 rounded text-center msg p-1 w-75 mx-auto"></div>
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-lg-4">
-                                <label class="form-label">Username</label>
+                        <input type="hidden" name="signup">
+                        <div class="part1">
+                            <div class="row mb-3 rounded text-center msg p-1 w-75 mx-auto"></div>
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-lg-4">
+                                    <label class="form-label">Username</label>
+                                </div>
+                                <div class="col-lg-8 userNameCol">
+                                    <input type="text" name="user" minlength="5" maxlength="16" autocomplete="off" id="user" class="form-control"required>
+                                    <i class="fa-solid fa-circle-xmark inavail"></i>
+                                    <i class="fa-solid fa-circle-check avail"></i>
+                                </div>
                             </div>
-                            <div class="col-lg-8 userNameCol">
-                                <input type="text" name="user" minlength="5" maxlength="16" autocomplete="off" id="user" class="form-control"required>
-                                <i class="fa-solid fa-circle-xmark inavail"></i>
-                                <i class="fa-solid fa-circle-check avail"></i>
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-lg-4">
+                                    <label class="form-label">Password</label>
+                                </div>
+                                <div class="col-lg-8 passCol">
+                                    <input type="password" minlength="6" maxlength="12" name="pass1" autocomplete="off" id="pass1" class="form-control"required>
+                                    <i class="fa-regular fa-eye showPw"></i>
+                                    <i class="fa-solid fa-circle-xmark diff"></i>
+                                    <i class="fa-solid fa-circle-check matching"></i>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-lg-4">
-                                <label class="form-label">Password</label>
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-lg-4">
+                                    <label class="form-label">Repeat Password</label>
+                                </div>
+                                <div class="col-lg-8 passCol">
+                                    <input type="password" minlength="6" maxlength="12" name="pass2" autocomplete="off" id="pass2" class="form-control"required>
+                                    <i class="fa-regular fa-eye showPw"></i>
+                                    <i class="fa-solid fa-circle-xmark diff"></i>
+                                    <i class="fa-solid fa-circle-check matching"></i>
+                                </div>
                             </div>
-                            <div class="col-lg-8 passCol">
-                                <input type="password" minlength="6" maxlength="12" name="pass1" autocomplete="off" id="pass1" class="form-control"required>
-                                <i class="fa-solid fa-circle-xmark diff"></i>
-                                <i class="fa-solid fa-circle-check matching"></i>
-                            </div>
-                        </div>
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-lg-4">
-                                <label class="form-label">Repeat Password</label>
-                            </div>
-                            <div class="col-lg-8 passCol">
-                                <input type="password" minlength="6" maxlength="12" name="pass2" autocomplete="off" id="pass2" class="form-control"required>
-                                <i class="fa-solid fa-circle-xmark diff"></i>
-                                <i class="fa-solid fa-circle-check matching"></i>
-                            </div>
-                        </div>
-                        <div class="row flex-row-reverse">
-                            <div class="col">
-                                <button type="button" class="mx-auto form-control next1">next</button>
-                            </div>
-                            <div class="col">
-                                <button type="button" class="mx-auto form-control back1">back</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="part2">
-                        <div class="row mb-3 rounded text-center msg1 p-1 w-75 mx-auto"></div>
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-lg-4">
-                                <label class="form-label">Fullname</label>
-                            </div>
-                            <div class="col-lg-8">
-                                <input type="text" minlength="2" maxlength="25" name="fullname" autocomplete="off" id="fullname" class="form-control"required>
+                            <div class="row flex-row-reverse">
+                                <div class="col">
+                                    <button type="button" class="mx-auto form-control next1">next</button>
+                                </div>
+                                <div class="col">
+                                    <button type="button" class="mx-auto form-control back1">back</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-lg-4">
-                                <label class="form-label">Email</label>
+                        <div class="part2">
+                            <div class="row mb-3 rounded text-center msg1 p-1 w-75 mx-auto"></div>
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-lg-4">
+                                    <label class="form-label">First name</label>
+                                </div>
+                                <div class="col-lg-8">
+                                    <input type="text" minlength="2" maxlength="10" name="firstName" autocomplete="off" id="firstname" class="form-control"required>
+                                </div>
                             </div>
-                            <div class="col-lg-8">
-                                <input type="email" name="email" id="email" autocomplete="off" class="form-control"required>
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-lg-4">
+                                    <label class="form-label">Last name</label>
+                                </div>
+                                <div class="col-lg-8">
+                                    <input type="text" minlength="2" maxlength="10" name="lastName" autocomplete="off" id="lastname" class="form-control"required>
+                                </div>
+                            </div>
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-lg-4">
+                                    <label class="form-label">Email</label>
+                                </div>
+                                <div class="col-lg-8">
+                                    <input type="email" name="email" id="email" autocomplete="off" class="form-control"required>
+                                </div>
+                            </div>
+                            <div class="row mt-5 flex-row-reverse">
+                                <div class="col">
+                                    <button type="submit" class="mx-auto form-control doneSign">Signup</button>
+                                </div>
+                                <div class="col">
+                                    <button type="button" class="mx-auto form-control back2">back</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="row mt-5 flex-row-reverse">
-                            <div class="col">
-                                <button type="submit" class="mx-auto form-control doneSign">Signup</button>
-                            </div>
-                            <div class="col">
-                                <button type="button" class="mx-auto form-control back2">back</button>
-                            </div>
-                        </div>
-                    </div>
                     </form>
                 </div>
             </div>

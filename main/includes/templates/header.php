@@ -11,3 +11,6 @@
     <script src="<?php echo $js; ?>jquery.js"></script>
 </head>
 <body>
+    <div class="main-container">
+        <div class="body-container">
+

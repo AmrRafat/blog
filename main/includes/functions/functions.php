@@ -1,149 +1,5 @@
 <?php
-// Function to create articles
-function createArticle($articleTitle, $name, $date, $subject, $elementsArray, $articleNo)
-{
-    $imgsCount = 1;
-    $elements = "";
-    $elementsKeys = array_keys($elementsArray);
-    foreach ($elementsKeys as $key) {
-        if (str_contains($key, 'subtitle')) {
-            $elements = $elements . '<h3 class="subtitle">' . $elementsArray[$key] . '</h3>';
-        } elseif (str_contains($key, 'paragraph')) {
-            foreach ($elementsArray[$key] as $line) {
-                $elements = $elements . '<p class="paragraph mb-0">' . $line . '</p>';
-            }
-        } elseif (str_contains($key, 'img')) {
-            $imgExt = explode('/', $elementsArray[$key]);
-            $elements = $elements . '<img src="imgs/' . $imgsCount . '.' . $imgExt[1] . '" alt="" class="mx-auto d-block img-thumbnail img-fluid my-3 articleImg border-2">';
-            $imgsCount++;
-        }
-    }
-    return '<?php session_start();
-    include "../specInit.php";
-    if (isset($_POST["comment"])) {
-        $userID = $_SESSION["id"];
-        $commentInfo = explode("\r\n", trim($_POST["comment"]));
-        $commentInfo = json_encode($commentInfo);
-        $dateNeeded = date("Y-m-j H-i-s");
-        $urlInfo = explode("/", $_SERVER["REQUEST_URI"]);
-        $lastOne = $urlInfo[count($urlInfo) - 1];
-        $rate = $_POST["rate"];
-        $needed_article_id = explode(".", $lastOne)[0];
-        $stmt = $con->prepare("SELECT user_id FROM comments WHERE article_id = ?");
-        $stmt->execute(array($needed_article_id));
-        $commentsUsers = $stmt->fetchAll();
-        $found = 0;
-        foreach ($commentsUsers as $commentsUser) {
-            if ($commentsUser["user_id"] == $userID) {
-                $found = 1;
-            }
-        }
-        if ($found == 0) {
-            $stmt1 = $con->prepare("INSERT INTO comments(user_id,article_id,comment,date,rate) VALUES(?,?,?,?,?)");
-            $stmt1->execute(array($userID, $needed_article_id, $commentInfo, $dateNeeded, $rate));
-        } else {
-            header("location: #comment");
-        }
-    } elseif (isset($_POST["editComment"])) {
-        $commentID = $_POST["comment_id"];
-        $stmt = $con->prepare("SELECT * FROM comments WHERE comment_id = ?");
-        $stmt->execute(array($commentID));
-        $info = $stmt->fetch();
-        $oldComment = $info["comment"];
-        $oldRate = $info["rate"];
-        if ($_POST["editComment"] != "") {
-            if ($_POST["editComment"] != "DEL_COMMENT") {
-                $commentInfo = explode("\r\n", trim($_POST["editComment"]));
-                $commentInfo = json_encode($commentInfo);
-                $rate = $_POST["rate"];
-                if ($oldComment != $commentInfo || $oldRate != $rate) {
-                    $userID = $_SESSION["id"];
-                    $dateNeeded = date("Y-m-j H-i-s");
-                    $urlInfo = explode("/", $_SERVER["REQUEST_URI"]);
-                    $lastOne = $urlInfo[count($urlInfo) - 1];
-                    $needed_article_id = explode(".", $lastOne)[0];
-                    $stmt1 = $con->prepare("UPDATE comments SET comment = ? , date = ?, rate = ? WHERE comment_id = ?");
-                    $stmt1->execute(array($commentInfo, $dateNeeded, $rate, $commentID));}
-            }
-        }
-    } elseif (!isset($_POST["comment"]) && !isset($_POST["editComment"]) && isset($_POST["comment_id"])) {
-        $commentID = $_POST["comment_id"];
-        $stmt = $con->prepare("DELETE FROM comments WHERE comment_id = ?");
-        $stmt->execute(array($commentID));
-    }
-    unset($_POST);
-    ?>
-    <div style="margin-top:90px"></div>
-    <div class="container article">
-        <div class="card mb-3">
-            <div class="card-header">
-                <div class="row align-items-center">
-                    <div class="col-lg-5 col-12">
-                    <h1 class="article-title">' . $articleTitle . '</h1>
-                    </div>
-                    <div class="col-lg-4 offset-lg-3 col-12">
-                    <h4 class="madeBy mt-2">Mabe by: ' . $name . '</h4>
-                    <h4 class="rating">Rating: <?php rating (' . $articleNo . ') ?></h4>
-                    <h4 class="publishDate">Date: ' . $date . '</h4>
-                    <h4 class="subject">Subject: ' . $subject . '</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">' . $elements . '</div>
-                <div class="card-footer d-flex justify-content-end flex-wrap">
-                <span class="me-2">Made by: ' . $name . '</span>
-                <div class="vr me-2"></div>
-                <span class="me-2">Rating: <?php rating (' . $articleNo . ') ?></span>
-                <div class="vr me-2"></div>
-                <span>Article No: ' . $articleNo . '</span>
-            </div>
-        </div>
-        <?php newComment() ?>
-        <?php $id = (isset($_SESSION["id"])) ? $_SESSION["id"] : 0; commentsSection(' . $articleNo . ', $id ) ?>
-    </div>
-    <?php include "../../includes/templates/footer.php";';
-}
-
-function newComment()
-{
-    if (isset($_SESSION['id'])) {
-        ?>
-        <form action="<?php echo $_SERVER['PHP_SELF'] ?>" class="mb-3" method="post">
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-floating mb-2">
-                        <!-- TODO: Add max number of characters to description -->
-                        <textarea class="form-control" name="comment" placeholder="Comment Here" id="commentArea" style="height: 100px; resize: none;" required></textarea>
-                        <label for="commentArea">Comment</label>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-between align-items-center px-3">
-                    <div class="rateField">
-                        <span>Leave a rate: </span>
-                        <i class="fa-regular fa-star rateChoice one"></i>
-                        <i class="fa-regular fa-star rateChoice two"></i>
-                        <i class="fa-regular fa-star rateChoice three"></i>
-                        <i class="fa-regular fa-star rateChoice four"></i>
-                        <i class="fa-regular fa-star rateChoice five"></i>
-                        <input type="hidden" name="rate" class="rate" value="5">
-                    </div>
-                    <div>
-                        <button type="reset" class="btn btn-outline-secondary me-2">Cancel</button>
-                        <button type="submit" class="btn btn-outline-secondary">Submit</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-        <?php
-} else {?>
-    <div class="card mb-2">
-        <a href="../../index.php" class="btn btn-outline-secondary">Login/Register</a>
-    </div>
-    <?php
-}
-}
-
-function commentsSection($article_id, $userID = 0)
+function commentsSection($article_id, $userID)
 { // To get all comments of an article and set the first one as the user's comment
     global $con;
     $stmt = $con->prepare("SELECT *, users.fullname AS fullname FROM comments INNER JOIN users ON comments.user_id = users.userid WHERE comments.article_id = ?");
@@ -158,7 +14,7 @@ function commentsSection($article_id, $userID = 0)
                 $firstComment = $stmt1->fetch();
                 ?>
     <!-- Comment of current user if found -->
-    <form id="comment" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+    <form id="comment" action="?<?php echo $firstComment['article_id'] ?>" method="post">
         <input type="hidden" name="comment_id" value="<?php echo $firstComment['comment_id'] ?>">
         <div class="card mb-3">
             <div class="card-header d-flex align-items-center justify-content-between">
@@ -199,7 +55,7 @@ $mainComment = json_decode($firstComment['comment']);
                         <label for="commentArea">Comment</label>
                     </div>
                 </div>
-                <div class="card-footer">
+                <div class="card-footer ratingInComment">
                     <span>Article rate: </span>
                     <input type="hidden" name="rate" class="rate" value="<?php echo $firstComment['rate'] ?>">
                     <?php
