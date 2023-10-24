@@ -215,11 +215,17 @@ i.matching {
   border-color: var(--mainColorSite);
 }
 
+.avatarImg {
+  max-width: 300px;
+  max-height: 300px;
+}
+
 .myArticles,
 .myQuestions,
 .fav,
 .newArticle,
-.newQuestion {
+.newQuestion,
+.btn-secondary {
   background-color: var(--shade1);
   color: white;
 }
@@ -229,11 +235,13 @@ i.matching {
 .fav:hover,
 .newArticle:hover,
 .newQuestion:hover,
+.btn-secondary:hover,
 .myArticles:focus,
 .myQuestions:focus,
 .fav:focus,
 .newArticle:focus,
-.newQuestion:focus {
+.newQuestion:focus,
+.btn-secondary:focus {
   color: white;
   background-color: var(--shade2);
 }
@@ -309,6 +317,10 @@ i.matching {
   z-index: 100;
   color: var(--mainColorSite);
 }
+
+.avatar {
+  display: none;
+}
 /* ====================================== */
 /* Article Form */
 /* ====================================== */
@@ -326,6 +338,11 @@ i.matching {
   .articleTools {
     width: 631px;
   }
+}
+
+.p-area {
+  height: 100px;
+  border: 1px solid var(--shade1);
 }
 
 .articleTools {

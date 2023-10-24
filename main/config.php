@@ -1,7 +1,7 @@
 <?php
 
 $dsn = "mysql:host/localhost;dbname='';port=[SET PORT NUMBER HERE!!]";
-$user = "root";
+$user = "root"; // Don't forget to put username and password of your sql server
 $pass = "";
 $options = array(
     PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',

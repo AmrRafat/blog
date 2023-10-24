@@ -1,10 +1,17 @@
 This is a demo project of a blog.
 
-In this blog you will be able to login as a member and as a moderator.
+In this project you will need to make sure to check config.php and set port number, username and password of your sql server.
 
-As a member, you will be able to post a new subject for discussion, comment on subjects as well and delete subjects you posted earlier if you would like.
-Of course as a member you have a profile where you can let other members know more about you.
+This project is based on:
 
-As a moderator, you will be able to check the subjects and approve the subject to be posted.
-You will have the ability to delete subjects or comments against the policy of the blog and that will send an automatic warning to the member.
+php, sql, jquery, bootstrap, css, js, html
 
+In this project you will be able to register, signin, make articles, ask questions, answer questions, comment and rate articles and add them to your favourite list.
+
+Also, you can delete the articles you made if you would like.
+
+You have full control over your profile.
+
+I hope this project get your interest.
+
+For any questions or suggestions, please don't hesitate to send me an email to 'amrraafat53@gmail.com'

@@ -28,12 +28,16 @@ if (isset($_POST)) {
             }
         }
         $elementsArray = json_encode($elementsArray);
+        // Submit info into DB
+        $thumbnailext = explode('/', $_FILES['image-0']['type'])[1];
+        $stmt = $con->prepare("INSERT INTO articles(subject,date,status,title,description,ext, user_id, elementsArray) VALUES(?,now(),?,?,?,?,?,?)");
+        $stmt->execute(array($_POST['subject'], 0, $_POST['articleTitle'], json_encode($_POST['description']), $thumbnailext, $_SESSION['id'], $elementsArray));
         // Creating the folders for the imgs of the article
         // First check the latest article number on DB
         $stmt = $con->prepare("SELECT article_id FROM articles ORDER BY article_id DESC LIMIT 1");
         $stmt->execute();
         $articlesNo = $stmt->fetch();
-        $articleNo = (!empty($articlesNo)) ? intval($articlesNo['article_id']) + 1 : '1';
+        $articleNo = (!empty($articlesNo)) ? intval($articlesNo['article_id']) : '1';
         if (!is_dir('layout/imgs/articles/' . $articleNo)) {
             mkdir('layout/imgs/articles/' . $articleNo, 0777, true); // creating the folder
             // Renaming images and uploading them to imgs folder of the article
@@ -49,14 +53,6 @@ if (isset($_POST)) {
                     $imgNo++;
                 }
             }
-        } else {
-            $articleNo = 0;
-        }
-        // Submit info into DB
-        if ($articleNo != 0) {
-            $thumbnailext = explode('/', $_FILES['image-0']['type'])[1];
-            $stmt = $con->prepare("INSERT INTO articles(subject,date,status,title,description,ext, user_id, elementsArray) VALUES(?,now(),?,?,?,?,?,?)");
-            $stmt->execute(array($_POST['subject'], 0, $_POST['articleTitle'], json_encode($_POST['description']), $thumbnailext, $_SESSION['id'], $elementsArray));
         }
     }
     // Reset the storages
@@ -115,7 +111,7 @@ foreach ($subjects as $subject) {?>
                 </div>
             </div>
             <div class="mb-3">
-                <p class="paragraph" style="white-space:pre">Paragraph Here</p>
+                <p class="paragraph p-area p-3 rounded-3" style="white-space:pre">Paragraph Here</p>
                 <div class="input-group pChange">
                     <textarea name="paragraph-0" id="" cols="30" rows="10" class="form-control" style="resize: none;" required></textarea>
                     <button type="button" class="btn btn-outline-secondary pDone">Done</button>

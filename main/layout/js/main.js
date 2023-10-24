@@ -173,9 +173,10 @@ $(function () {
   // ============================
   // Open & submit profile edit
   $(".editProfile").on("click", function () {
-    $(".editProfileForm input:not(.age, #specialization)").removeAttr(
+    $(".editProfileForm input:not(.age, #specialization, .avatar)").removeAttr(
       "readonly"
     );
+    $(".avatar").css("display", "flex");
     var eduLvl = $("#eduLvl").val();
     if (
       eduLvl == "Bachelor's degree" ||
@@ -360,7 +361,7 @@ $(function () {
   // Paragraphs
   $(".pBtn").on("click", function () {
     $(".card-body").append(
-      '<div class="mb-3"><p class="paragraph" style="white-space:pre">Paragraph Here</p><div class="input-group pChange"><textarea name="paragraph-' +
+      '<div class="mb-3"><p class="paragraph p-area p-3 rounded-3" style="white-space:pre">Paragraph Here</p><div class="input-group pChange"><textarea name="paragraph-' +
         paragraphNo +
         '" cols="30" rows="10" class="form-control" style="resize: none;"></textarea><button type="button" class="btn btn-outline-secondary pDone">Done</button><button type="button" class="btn btn-outline-secondary deleteBlock">Delete</button></div></div>'
     );
@@ -549,6 +550,20 @@ $(function () {
         editFav: editFav,
         userID: user,
         article: article,
+      },
+    });
+  });
+  // Delete article
+  $(".deleteArticle").on("click", function () {
+    var articleID = $(this).data("targetedid");
+    $.ajax({
+      type: "POST",
+      url: "includes/functions/ajax.php",
+      data: {
+        articleID: articleID,
+      },
+      success: function (html) {
+        location.reload(true);
       },
     });
   });

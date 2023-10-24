@@ -110,6 +110,7 @@ foreach ($subjects as $subject) {?>
     $subject = array_keys($_GET)[0];
     $exp = "/\d/";
     if ($subject == 'my_articles') {?>
+    <!-- My Articles -->
         <h1 class="text-center my-4">My articles</h1>
         <?php
 $stmt = $con->prepare("SELECT * FROM articles WHERE user_id = ?");
@@ -119,31 +120,35 @@ $stmt = $con->prepare("SELECT * FROM articles WHERE user_id = ?");
             $articles = $stmt->fetchAll();
             foreach ($articles as $article) {
                 ?>
-        <a href="?<?php echo $article['article_id'] ?>" class="text-decoration-none text-reset mb-3 d-block articleCard">
-            <div class="card p-3" style="max-height: 200px; overflow:hidden">
-                <div class="row" style="height: 160px;">
-                    <div class="col-8">
-                        <h3><?php echo $article['title'] ?></h3>
-                        <?php
+                <div class="articleItem position-relative">
+                    <a href="?<?php echo $article['article_id'] ?>" class="text-decoration-none text-reset mb-3 d-block articleCard">
+                        <div class="card p-3" style="max-height: 200px; overflow:hidden">
+                            <div class="row" style="height: 160px;">
+                                <div class="col-8">
+                                    <h3><?php echo $article['title'] ?></h3>
+                                    <?php
 $descLines = json_decode($article['description']);
                 foreach ($descLines as $line) {?>
-        <p style="max-height: 125px; overflow:hidden; font-size: 18px; margin-bottom:0;"><?php echo $line ?></p>
-        <?php
+                    <p style="max-height: 125px; overflow:hidden; font-size: 18px; margin-bottom:0;"><?php echo $line ?></p>
+                    <?php
 }
                 ?>
+                            </div>
+                            <div class="col-4 position-relative">
+                                <img src="<?php echo 'layout/imgs//articles/' . $article['article_id'] . '/1.' . $article['ext'] ?>" alt="" class="img-fluid img-thumbnail d-block mx-auto" style="max-height: 180px;position: absolute;top: 50%;right:0;transform: translateY(-50%)">
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <button type="button" class="btn btn-secondary position-absolute btn-sm deleteArticle" data-targetedid="<?php echo $article['article_id'] ?>" style="bottom: 4px; left:4px; z-index: 10;">Delete</button>
                 </div>
-                <div class="col-4 position-relative">
-                    <img src="<?php echo 'layout/imgs//articles/' . $article['article_id'] . '/1.' . $article['ext'] ?>" alt="" class="img-fluid img-thumbnail d-block mx-auto" style="max-height: 180px;position: absolute;top: 50%;right:0;transform: translateY(-50%)">
-                </div>
-            </div>
-        </div>
-    </a>
     <?php }
         } else {?>
                 <div class="alert text-center">No articles yet</div>
                 <?php }
         ?>
     <?php } elseif ($subject == "my_fav") {?>
+        <!--Favourite Articles  -->
         <h1 class="text-center my-4">My favourite articles</h1>
         <?php
 $stmt = $con->prepare("SELECT fav_articles FROM users WHERE userid = ?");

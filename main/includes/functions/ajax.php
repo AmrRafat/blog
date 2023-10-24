@@ -20,7 +20,7 @@ if (isset($_POST['user'])) { // Check username in DB
     } else {
         echo '1';
     }
-} elseif (isset($_POST['editFav'])) {
+} elseif (isset($_POST['editFav'])) { // Add and remove from favourite list
     $userID = $_POST['userID'];
     $article = $_POST['article'];
     $stmt = $con->prepare("SELECT fav_articles as fav FROM users WHERE userid = ?");
@@ -43,4 +43,16 @@ if (isset($_POST['user'])) { // Check username in DB
     $stmt1 = $con->prepare("UPDATE users SET fav_articles = ? WHERE userid = ?");
     $stmt1->execute(array($favList, $userID));
     echo $favList;
+} elseif (isset($_POST['articleID'])) {
+    $articleID = $_POST['articleID'];
+    $stmt = $con->prepare("DELETE FROM articles WHERE article_id = ?");
+    $stmt->execute(array($articleID));
+    foreach (scandir('../../layout/imgs/articles/' . $articleID) as $item) {
+        if ($item == '.' || $item == "..") {
+            continue;
+        } else {
+            unlink('../../layout/imgs/articles/' . $articleID . '/' . $item);
+        }
+    }
+    rmdir('../../layout/imgs/articles/' . $articleID);
 }

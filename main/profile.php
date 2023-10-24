@@ -3,7 +3,9 @@ session_start();
 include "init.php";
 if (isset($_POST['username'])) {
     // Set the variables
+    $file = ($_FILES['avatar']['name'] != "") ? $_FILES['avatar'] : 0;
     $id = $_SESSION['id'];
+    $fileName;
     $username = filter_var($_POST['username'], FILTER_SANITIZE_STRING);
     $firstName = filter_var($_POST['firstName'], FILTER_SANITIZE_STRING);
     $lastName = filter_var($_POST['lastName'], FILTER_SANITIZE_STRING);
@@ -14,9 +16,20 @@ if (isset($_POST['username'])) {
     $country = isset($_POST['country']) ? $_POST['country'] : null;
     $educationLevel = isset($_POST['eduLvl']) ? $_POST['eduLvl'] : null;
     $specialization = isset($_POST['specialization']) ? filter_var($_POST['specialization'], FILTER_SANITIZE_STRING) : 'Not applied';
+    // If there is a change in avatar and get the old avatar if found
+    if ($file == 0) { // that means the input is empty
+        $stmt = $con->prepare('SELECT avatar FROM users WHERE userid = ?');
+        $stmt->execute(array($id));
+        $data = $stmt->fetch();
+        $fileName = $data['avatar'];
+    } else {
+        $ext = trim(explode('/', $file['type'])[1]);
+        $fileName = $id . '.' . $ext;
+        move_uploaded_file($file['tmp_name'], 'layout/imgs/avatars/' . $fileName);
+    }
     // Update info in DB
-    $stmt = $con->prepare("UPDATE users SET username = ?, fullname = ?, email = ?, birthdate = ?, gender = ?, country = ?, educationlvl = ?, specialization = ? WHERE userid = ?");
-    $stmt->execute(array($username, $fullname, $email, $birthdate, $gender, $country, $educationLevel, $specialization, $id));
+    $stmt = $con->prepare("UPDATE users SET username = ?, fullname = ?, email = ?, birthdate = ?, gender = ?, country = ?, educationlvl = ?, specialization = ?, avatar = ? WHERE userid = ?");
+    $stmt->execute(array($username, $fullname, $email, $birthdate, $gender, $country, $educationLevel, $specialization, $fileName, $id));
     // Change setting the session info
     $_SESSION['username'] = $username; // Register Session Name
     $_SESSION['fullname'] = $fullname; // Register Fullname
@@ -25,6 +38,7 @@ if (isset($_POST['username'])) {
 $stmt = $con->prepare("SELECT * FROM users WHERE userid = ? LIMIT 1");
 $stmt->execute(array($_SESSION['id']));
 $info = $stmt->fetch();
+$avatarImg = ($info['avatar'] == null) ? "layout/imgs/avatars/defaultAvatar.jpg" : "layout/imgs/avatars/" . $info['avatar'];
 
 ?>
     <div style="margin-top:80px"></div>
@@ -33,7 +47,7 @@ $info = $stmt->fetch();
             <div class="card-body py-4">
                 <div class="row">
                     <div class="col-lg-4 text-center">
-                        <img src="https://placehold.co/300x300" alt="" class="img-fluid img-thumbnail">
+                        <img src=<?php echo $avatarImg ?> alt="" class="img-fluid img-thumbnail avatarImg">
                         <hr>
                         <div class="profileMenu">
                             <div class="row align-items-center">
@@ -71,7 +85,7 @@ echo '</div>';
                             </div>
                         </div>
                         <hr>
-                        <form action="<?php $_SERVER['PHP_SELF']?>" method="post" class="editProfileForm px-4">
+                        <form action="<?php $_SERVER['PHP_SELF']?>" method="post" class="editProfileForm px-4" enctype="multipart/form-data">
                         <input type="hidden" name="id" id="profileId" value="<?php echo $_SESSION["id"] ?>">
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">Username</span>
@@ -155,9 +169,14 @@ foreach ($countries as $oneCountry) {?>
                                         <option <?php if ($eduLvl == "Doctorate or higher") {echo "selected";}?> value="Doctorate or higher">Doctorate or higher</option>
                                     </select>
                                 </div>
-                                <div class="input-group">
+                                <div class="input-group mb-3">
                                     <span class="input-group-text">Specialization</span>
                                     <input type="text" name="specialization" id="specialization" autocomplete="off" class="form-control" value="<?php echo $info['specialization'] ?>" readonly>
+                                </div>
+                                <div class="input-group avatar">
+                                    <span class="input-group-text">Avatar image</span>
+                                    <input type="file" name="avatar" id="avatar" class="form-control">
+                                    <span class="input-group-text">Choose a 300x300 image</span>
                                 </div>
                     </form>
                     </div>
