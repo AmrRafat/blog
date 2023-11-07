@@ -337,8 +337,7 @@ if (isset($_SESSION['id'])) {
                     <div class="card">
                         <div class="card-body">
                             <div class="form-floating mb-2">
-                                <!-- TODO: Add max number of characters to description -->
-                                <textarea class="form-control" name="comment" placeholder="Comment Here" id="commentArea" style="height: 100px; resize: none;" required></textarea>
+                                <textarea class="form-control" name="comment" placeholder="Comment Here" maxlength="300" id="commentArea" style="height: 100px; resize: none;" required></textarea>
                                 <label for="commentArea">Comment</label>
                             </div>
                         </div>

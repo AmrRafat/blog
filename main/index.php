@@ -31,7 +31,7 @@ if (isset($_POST)) {
         } elseif (isset($_POST['signup'])) {
             // Get all info
             $user = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
-            $pass = sha1(filter_var($_POST['pass1']), FILTER_SANITIZE_STRING);
+            $pass = sha1(filter_var($_POST['pass1'], FILTER_SANITIZE_STRING));
             $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
             $firstName = filter_var($_POST['firstName'], FILTER_SANITIZE_STRING);
             $lastName = filter_var($_POST['lastName'], FILTER_SANITIZE_STRING);

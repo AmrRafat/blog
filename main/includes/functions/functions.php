@@ -19,7 +19,14 @@ function commentsSection($article_id, $userID)
         <div class="card mb-3">
             <div class="card-header d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
-                    <img src="https://placehold.co/300x300" alt="" class="rounded-circle d-block me-3" style="max-height: 50px; max-width:50px;">
+                <?php
+// Get avatar of user
+                $stmt2 = $con->prepare('SELECT avatar FROM users WHERE userid = ?');
+                $stmt2->execute(array($userID));
+                $userData = $stmt2->fetch();
+                $avatar = 'layout/imgs/avatars/' . $userData['avatar'];
+                ?>
+                    <img src="<?php echo $avatar ?>" alt="" class="rounded-circle d-block me-3" style="max-height: 50px; max-width:50px;">
                     <h4><?php echo $firstComment['fullname'] ?></h4>
                 </div>
                 <div class="d-flex align-items-center">
@@ -83,7 +90,13 @@ $userRate = $firstComment['rate'];
                     <div class="card mb-3">
                         <div class="card-header d-flex align-items-center justify-content-between">
                             <div class="d-flex align-items-center">
-                                <img src="https://placehold.co/300x300" alt="" class="rounded-circle d-block me-3" style="max-height: 50px; max-width:50px;">
+                            <?php
+$stmt3 = $con->prepare('SELECT avatar FROM users WHERE userid = ?');
+                $stmt3->execute(array($comment['user_id']));
+                $userAvatarData = $stmt3->fetch();
+                $userAvatar = 'layout/imgs/avatars/' . $userAvatarData['avatar'];
+                ?>
+                                <img src="<?php echo $userAvatar ?>" alt="" class="rounded-circle d-block me-3" style="max-height: 50px; max-width:50px;">
                                 <h4><?php echo $comment['fullname'] ?></h4>
                             </div>
                             <div class="d-flex align-items-center">

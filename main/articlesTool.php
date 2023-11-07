@@ -92,8 +92,7 @@ foreach ($subjects as $subject) {?>
             </div>
             <div class="card-body">
                     <div class="form-floating mb-3">
-                        <!-- TODO: Add max number of characters to description -->
-                        <textarea class="form-control" name="description" placeholder="Comment Here" id="commentArea" style="height: 150px; resize: none;" required></textarea>
+                        <textarea class="form-control" name="description" placeholder="Comment Here" id="commentArea" maxlength="300" style="height: 150px; resize: none;" required></textarea>
                         <label for="commentArea">Description</label>
                     </div>
             <div class="articleTools d-flex flex-wrap justify-content-around mx-auto rounded-2 border py-3 position-sticky mb-3">
