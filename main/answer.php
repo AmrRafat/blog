@@ -57,7 +57,25 @@ unset($_POST);
         <div class="card-header pt-3">
             <div class="questionTitle input-group d-flex justify-content-between align-items-center mb-3">
                 <h3><?php echo $info['question'] ?></h3>
-                <span>Subject: <?php echo $info['subject'] ?></span>
+                <div>
+                    <span>Subject: <?php echo $info['subject'] ?></span>
+                    <?php
+if (isset($_SESSION['id'])) {
+    if ($info['user_id'] == $_SESSION['id'] && $info['done'] == 0) {?>
+<button type="button" class="btn btn-outline-secondary ms-2 mrkDone" data-qid="<?php echo $info['question_id'] ?>">Change to answered</button>
+<?php } else {?>
+                            <button type="button" class="btn btn-outline-secondary ms-2 mrkUndone" data-qid="<?php echo $info['question_id'] ?>">Change to unanswered</button>
+                        <?php }
+} else {
+    echo '<div class="vr"></div>';
+    if ($info['done'] == 0) {
+        echo '<span class="ms-2">Not answered</span>';
+    } else {
+        echo '<span class="ms-2">Answered</span>';
+    }
+}
+?>
+                </div>
             </div>
         </div>
         <div class="card-body questionDetails pt-3">
@@ -118,7 +136,14 @@ if (!empty($answers)) {
         <div class="card mb-3 answers">
             <div class="card-header d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
-                    <img src="https://placehold.co/300x300" alt="" class="rounded-circle d-block me-3" style="max-height: 50px; max-width:50px;">
+                    <?php
+// Get avatar
+            $stmt3 = $con->prepare('SELECT avatar FROM users WHERE userid = ?');
+            $stmt3->execute(array($_SESSION['id']));
+            $avatarData = $stmt3->fetch();
+            $avatarImage = $avatarData['avatar'] == null ? "layout/imgs/avatars/defaultAvatar.jpg" : "layout/imgs/avatars/" . $avatarData['avatar'];
+            ?>
+                    <img src="<?php echo $avatarImage ?>" alt="" class="rounded-circle d-block me-3" style="max-height: 50px; max-width:50px;">
                     <h4><?php echo $firstAnswer['fullname'] ?></h4>
                 </div>
                 <div class="d-flex align-items-center">
@@ -146,6 +171,15 @@ $mainAnswer = json_decode($firstAnswer['answer']);
             echo trim($completeAnswer);?></textarea>
                         <label for="answer">Answer</label>
                     </div>
+                    <div class="d-flex justify-content-end">
+                        <?php
+if ($firstAnswer['approved'] == 0) {
+                echo '<i class="fa-regular fa-square-check btn text-reset p-0 checkAnswer" data-answerid="' . $firstAnswer['answer_id'] . '" data-questionid = "' . $firstAnswer['question_id'] . '"></i>';
+            } else {
+                echo '<i class="fa-solid fa-square-check btn text-reset p-0 checkAnswer" data-answerid="' . $firstAnswer['answer_id'] . '" data-questionid = "' . $firstAnswer['question_id'] . '"></i>';
+            }
+            ?>
+                    </div>
                 </div>
             </div>
         </form>
@@ -160,7 +194,14 @@ $mainAnswer = json_decode($firstAnswer['answer']);
                     <div class="card mb-3 answers">
                         <div class="card-header d-flex align-items-center justify-content-between">
                             <div class="d-flex align-items-center">
-                                <img src="https://placehold.co/300x300" alt="" class="rounded-circle d-block me-3" style="max-height: 50px; max-width:50px;">
+                            <?php
+// Get avatar
+            $stmt3 = $con->prepare('SELECT avatar FROM users WHERE userid = ?');
+            $stmt3->execute(array($answer['user_id']));
+            $avatarData = $stmt3->fetch();
+            $avatarImage = $avatarData['avatar'] == null ? "layout/imgs/avatars/defaultAvatar.jpg" : "layout/imgs/avatars/" . $avatarData['avatar'];
+            ?>
+                    <img src="<?php echo $avatarImage ?>" alt="" class="rounded-circle d-block me-3" style="max-height: 50px; max-width:50px;">
                                 <h4><?php echo $answer['fullname'] ?></h4>
                             </div>
                             <div class="d-flex align-items-center">
@@ -179,6 +220,15 @@ $mainAnswer = json_decode($answer['answer']);
             <p class="px-4 mb-0"><?php echo $part ?></p>
             <?php }
             ?>
+            <div class="d-flex justify-content-end">
+                <?php
+if ($answer['approved'] == 0) {
+                echo '<i class="fa-regular fa-square-check btn text-reset p-0 checkAnswer" data-answerid="' . $answer['answer_id'] . '"  data-questionid="' . $answer['question_id'] . '"></i>';
+            } else {
+                echo '<i class="fa-solid fa-square-check btn text-reset p-0 checkAnswer" data-answerid="' . $answer['answer_id'] . '" data-questionid="' . $answer['question_id'] . '"></i>';
+            }
+            ?>
+            </div>
                 </div>
             </div>
             <?php }
@@ -186,7 +236,7 @@ $mainAnswer = json_decode($answer['answer']);
 } else {
     ?>
             <div class="card mb-3 py-3">
-                <div class="text-center" style="font-size: 18px;">No comments</div>
+                <div class="text-center" style="font-size: 18px;">No answers</div>
             </div>
             <?php
 }?>

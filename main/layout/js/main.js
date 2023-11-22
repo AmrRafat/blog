@@ -576,6 +576,64 @@ $(function () {
       e.preventDefault();
     }
   });
+  // Mark a question as done and undone
+  $(".mrkDone").on("click", function () {
+    var qID = $(this).data("qid");
+    $.ajax({
+      type: "POST",
+      url: "includes/functions/ajax.php",
+      data: {
+        qID: qID,
+        way: "done",
+      },
+      success: function (html) {
+        if (html == 1) {
+          location.reload();
+        } else {
+          alert(
+            "You must approve an anser first using mark on bottom right corner"
+          );
+        }
+      },
+    });
+  });
+  $(".mrkUndone").on("click", function () {
+    var qID = $(this).data("qid");
+    $.ajax({
+      type: "POST",
+      url: "includes/functions/ajax.php",
+      data: {
+        qID: qID,
+        way: "undone",
+      },
+      success: function (html) {
+        location.reload();
+      },
+    });
+  });
+  // Mark an answer as approved
+  $(".checkAnswer").on("click", function () {
+    var questionID = $(this).data("questionid");
+    var answerID = $(this).data("answerid");
+    var markAnswer;
+    if ($(this).hasClass("fa-regular")) {
+      markAnswer = 1;
+    } else {
+      markAnswer = 0;
+    }
+    $.ajax({
+      type: "POST",
+      url: "includes/functions/ajax.php",
+      data: {
+        questionID: questionID,
+        answerID: answerID,
+        markAnswer: markAnswer,
+      },
+      success: function () {
+        location.reload();
+      },
+    });
+  });
   // Allow editing answer
   $(".editAnswer").on("click", function () {
     $(".editAnswerText").removeAttr("style", "display: block;");

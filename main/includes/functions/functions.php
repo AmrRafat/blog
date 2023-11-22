@@ -24,7 +24,7 @@ function commentsSection($article_id, $userID)
                 $stmt2 = $con->prepare('SELECT avatar FROM users WHERE userid = ?');
                 $stmt2->execute(array($userID));
                 $userData = $stmt2->fetch();
-                $avatar = 'layout/imgs/avatars/' . $userData['avatar'];
+                $avatar = $userData['avatar'] == null ? "layout/imgs/avatars/defaultAvatar.jpg" : 'layout/imgs/avatars/' . $userData['avatar'];
                 ?>
                     <img src="<?php echo $avatar ?>" alt="" class="rounded-circle d-block me-3" style="max-height: 50px; max-width:50px;">
                     <h4><?php echo $firstComment['fullname'] ?></h4>
@@ -94,7 +94,7 @@ $userRate = $firstComment['rate'];
 $stmt3 = $con->prepare('SELECT avatar FROM users WHERE userid = ?');
                 $stmt3->execute(array($comment['user_id']));
                 $userAvatarData = $stmt3->fetch();
-                $userAvatar = 'layout/imgs/avatars/' . $userAvatarData['avatar'];
+                $userAvatar = $userAvatarData['avatar'] == null ? "layout/imgs/avatars/defaultAvatar.jpg" : 'layout/imgs/avatars/' . $userAvatarData['avatar'];
                 ?>
                                 <img src="<?php echo $userAvatar ?>" alt="" class="rounded-circle d-block me-3" style="max-height: 50px; max-width:50px;">
                                 <h4><?php echo $comment['fullname'] ?></h4>

@@ -55,4 +55,33 @@ if (isset($_POST['user'])) { // Check username in DB
         }
     }
     rmdir('../../layout/imgs/articles/' . $articleID);
+} elseif (isset($_POST['qID'])) {
+    if ($_POST['way'] == 'done') {
+        $stmt = $con->prepare("SELECT * FROM answers WHERE approved = 1 && question_id = ?");
+        $stmt->execute(array($_POST['qID']));
+        $count = $stmt->rowCount();
+        if ($count > 0) {
+            $stmt1 = $con->prepare('UPDATE questions SET done = 1 WHERE question_id = ?');
+            $stmt1->execute(array($_POST['qID']));
+            echo 1;
+        } else {
+            echo 0;
+        }
+    } else {
+        $stmt1 = $con->prepare('UPDATE questions SET done = 0 WHERE question_id = ?');
+        $stmt1->execute(array($_POST['qID']));
+    }
+} elseif (isset($_POST['markAnswer'])) {
+    $answer2Change = $_POST['answerID'];
+    $way2Change = $_POST['markAnswer'];
+    $questionTarget = $_POST['questionID'];
+    if ($way2Change == 1) {
+        $stmt = $con->prepare("UPDATE answers SET approved = 0 WHERE question_id = ?");
+        $stmt->execute(array($questionTarget));
+        $stmt1 = $con->prepare("UPDATE answers SET approved = 1 WHERE answer_id = ?");
+        $stmt1->execute(array($answer2Change));
+    } else {
+        $stmt1 = $con->prepare("UPDATE answers SET approved = 0 WHERE answer_id = ?");
+        $stmt1->execute(array($answer2Change));
+    }
 }
