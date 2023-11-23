@@ -72,7 +72,8 @@ try {
                 question_id int(11),
                 user_id int(11),
                 answer text,
-                date datetime
+                date datetime,
+                approved int(11) DEFAULT 0
                 )");
             $stmt1->execute();
             $stmt2->execute();
